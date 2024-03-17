@@ -61,8 +61,15 @@ while getgenv().autoBalloon do
 
         ReplicatedStorage.Network.Slingshot_FireProjectile:InvokeServer(unpack(args))
 
+        task.wait(0.1)
+
+        local args = {
+            [1] = balloonId
+        }
+
         game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
         
+        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
         -- Destroying the balloon if it's still alive
         if balloonData and not balloonData.Popped then
             ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
@@ -92,17 +99,13 @@ while getgenv().autoBalloon do
             end
         end)
 
-        task.wait(0.1)
-
-        local args = {
-            [1] = balloonId
-        }
-
         ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(unpack(args))
 
         task.wait()
 
         ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
+
+
         
 
         print("Popped balloon, waiting " .. tostring(getgenv().autoBalloonConfig.BALLOON_DELAY) .. " seconds")
