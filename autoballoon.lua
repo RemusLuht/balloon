@@ -71,9 +71,16 @@ while getgenv().autoBalloon do
 
         task.wait()
 
-        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
+        local argss = {
+            [1] = Vector3.new(balloonPosition.X, balloonPosition.Y + 25, balloonPosition.Z),
+            [2] = 0.5794160315249014,
+            [3] = -0.8331117721691044,
+            [4] = 200
+        }
+
+        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(argss))
         
-        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
+        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(argss))
         -- Destroying the balloon if it's still alive
 
         for _, lootbag in pairs(Workspace.__THINGS:FindFirstChild("Lootbags"):GetChildren()) do
