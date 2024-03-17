@@ -67,13 +67,14 @@ while getgenv().autoBalloon do
             [1] = balloonId
         }
 
+        ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(unpack(args))
+
+        task.wait()
+
         game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
         
         game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
         -- Destroying the balloon if it's still alive
-        if balloonData and not balloonData.Popped then
-            ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
-        end
 
         for _, lootbag in pairs(Workspace.__THINGS:FindFirstChild("Lootbags"):GetChildren()) do
             if lootbag then
@@ -98,10 +99,6 @@ while getgenv().autoBalloon do
                 orb:Destroy()
             end
         end)
-
-        ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(unpack(args))
-
-        task.wait()
 
         ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
 
