@@ -71,15 +71,13 @@ while getgenv().autoBalloon do
 
         task.wait()
 
+
+        
         local argss = {
-            [1] = Vector3.new(balloonPosition.X, balloonPosition.Y + 25, balloonPosition.Z),
-            [2] = 0.5794160315249014,
-            [3] = -0.8331117721691044,
-            [4] = 200
+            [1] = Ray.new(balloonPosition, Vector3.new(0, -1, 0)), -- Using balloon position directly for the Ray origin
+            [2] = balloonPosition -- Using balloon position directly for the Vector3 argument
         }
 
-        game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(argss))
-        
         game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(argss))
         -- Destroying the balloon if it's still alive
 
