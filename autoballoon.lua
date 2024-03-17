@@ -73,7 +73,37 @@ while getgenv().autoBalloon do
 
         ReplicatedStorage.Network.Slingshot_Unequip:InvokeServer()
 
+        -- Add this line to destroy the balloon
         game:GetService("ReplicatedStorage").Network.Click:FireServer(unpack(args))
+        
+        -- Destroying the balloon if it's still alive
+        if balloonData and not balloonData.Popped then
+            ReplicatedStorage.Network.BalloonGifts_BalloonHit:FireServer(balloonId)
+        end
+
+        for _, lootbag in pairs(Workspace.__THINGS:FindFirstChild("Lootbags"):GetChildren()) do
+            if lootbag then
+                ReplicatedStorage.Network:WaitForChild("Lootbags_Claim"):FireServer(unpack( { [1] = { [1] = lootbag.Name, }, } ))
+                lootbag:Destroy()
+                task.wait()
+            end
+        end
+        
+        Workspace.__THINGS:FindFirstChild("Lootbags").ChildAdded:Connect(function(lootbag)
+            task.wait()
+            if lootbag then
+                ReplicatedStorage.Network:WaitForChild("Lootbags_Claim"):FireServer(unpack( { [1] = { [1] = lootbag.Name, }, } ))
+                lootbag:Destroy()
+            end
+        end)
+        
+        Workspace.__THINGS:FindFirstChild("Orbs").ChildAdded:Connect(function(orb)
+            task.wait()
+            if orb then
+                ReplicatedStorage.Network:FindFirstChild("Orbs: Collect"):FireServer(unpack( { [1] = { [1] = tonumber(orb.Name), }, } ))
+                orb:Destroy()
+            end
+        end)
 
         print("Popped balloon, waiting " .. tostring(getgenv().autoBalloonConfig.BALLOON_DELAY) .. " seconds")
         task.wait(getgenv().autoBalloonConfig.BALLOON_DELAY)
