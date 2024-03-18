@@ -2,6 +2,22 @@ repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
 print("Loaded")
+getgenv().MoneyPrinter = {
+    toolName = "Slingshot",
+    autoBalloons = true,
+    autoPresents = true,
+    autoOpenGifts = false,
+
+    serverHopper = true,
+    avoidCooldown = false,
+    minServerTime = 10,
+
+    sendWeb = true,
+    webURL = "https://discord.com/api/webhooks/1197937174713217084/CE6-BwCF_cV1Qm5Wsosd6iyENIhv5yIVeQUX5eHlD6J8_cVEjvuCAw5w-Oe94a7y4HzC",
+
+    maybeCPUReducer = true,
+    debugMode = false,
+}
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 	print("Attempting CPU Reduce")
 	pcall(function()
