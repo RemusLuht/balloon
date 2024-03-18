@@ -15,7 +15,7 @@ getgenv().MoneyPrinter = {
     sendWeb = true,
     webURL = "https://discord.com/api/webhooks/1197937174713217084/CE6-BwCF_cV1Qm5Wsosd6iyENIhv5yIVeQUX5eHlD6J8_cVEjvuCAw5w-Oe94a7y4HzC",
 
-    maybeCPUReducer = true,
+    maybeCPUReducer = false,
     debugMode = false,
 }
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
