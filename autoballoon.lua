@@ -9,7 +9,7 @@ getgenv().MoneyPrinter = {
     autoOpenGifts = true,
 
     serverHopper = true,
-    avoidCooldown = false,
+    avoidCooldown = true,
     minServerTime = 10,
 
     sendWeb = true,
