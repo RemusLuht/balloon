@@ -1,15 +1,11 @@
 getgenv().MoneyPrinter = {
     toolName = "Slingshot",
     autoBalloons = true,
-    autoPresents = false,
-
-    avoidCooldown = false,
-    minServerTime = 0, -- Avoid 268 if multi-accounting : Force stay in server for x time even if no Balloons
 
     sendWeb = true,
     webURL = "https://discord.com/api/webhooks/1219664843712495646/R8GVD7AkvB_eZZOcVIX6yjIRyX9QT6DtTyZ3S5xyDTe9mI5eBQD7bRXL50PDq6-OEmAJ",
 
-    maybeCPUReducer = true,
+	maybeCPUReducer = true,
 }
 repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
@@ -31,6 +27,46 @@ function getInfo(name) return saveMod.Get()[name] end
 function getTool() return Player.Character:FindFirstChild("WEAPON_"..Player.Name, true) end
 function equipTool(toolName) return Library.Network.Invoke(toolName.."_Toggle") end
 function getCurrentZone() return Library["MapCmds"].GetCurrentZone() end
+if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
+	local Lib = require(game.ReplicatedStorage.Library)
+
+	function xTab(TABLE)
+		for i,v in pairs(TABLE) do
+			if type(v) == "function" then
+				TABLE[i] = function(...) return end
+			end
+			if type(v) == "table" then
+				xTab(v)
+			end
+		end
+	end
+	xTab(Lib.WorldFX)
+	xTab(Lib.NotificationCmds.Item)
+
+	for i,v in pairs(game:GetDescendants()) do
+		if v:IsA("MeshPart") then
+			v.MeshId = ""
+		end
+		if v:IsA("BasePart") or v:IsA("MeshPart") then
+			v.Transparency = 1
+		end
+		if v:IsA("Texture") or v:IsA("Decal") then
+			v.Texture = ""
+		end
+		if v:IsA("ParticleEmitter") then
+			v.Lifetime = NumberRange.new(0)
+			v.Transparency = NumberSequence.new({NumberSequenceKeypoint.new(0,0), NumberSequenceKeypoint.new(1,0)})
+			v.Enabled = false
+		end
+		if v:IsA("BillboardGui") or v:IsA("SurfaceGui") or v:IsA("Trail") or v:IsA("Beam") then
+			v.Enabled = false
+		end
+		if v:IsA("Highlight") then
+			v.OutlineTransparency = 1
+			v.FillTransparency = 1
+		end
+	end
+end
 function sendNotif(msg)
 	local message = {content = msg}
 	local jsonMessage = HttpService:JSONEncode(message)
@@ -50,17 +86,7 @@ function getBalloonUID(zoneName)
 		end
 	end
 end
--- function getServer()
--- 	local servers = game.HttpService:JSONDecode(game:HttpGet('https://games.roblox.com/v1/games/' .. tostring(game.PlaceId) .. '/servers/Public?sortOrder=Asc&limit=100')).data
--- 	local server = servers[Random.new():NextInteger(1, 100)]
--- 	if server then return server else return getServer() end
--- end
-function getPresents() for i,v in pairs(Library.Save.Get().HiddenPresents) do 
-		if not v.Found and v.ID then 
-			local success,reason = Library.Network.Invoke("Hidden Presents: Found", v.ID) 
-		end 
-	end 
-end
+
 function getTotalRAP(num)
 	local suffixes = {"", "k", "m", "b"}
 	local suffixInd = 1
@@ -102,9 +128,6 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 	v:Destroy()
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
-if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
-	sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
-end
 local startGifts = 0
 local startLarge = 0
 for i,v in pairs(getInfo("Inventory").Misc) do
@@ -117,7 +140,6 @@ for i,v in pairs(getInfo("Inventory").Misc) do
 end
 local startTime = os.time()
 while getgenv().MoneyPrinter.autoBalloons do task.wait()
-	if getgenv().MoneyPrinter.autoPresents then getPresents() end
 	for _,Balloon in pairs(Library.Network.Invoke("BalloonGifts_GetActiveBalloons")) do task.wait(0.03)
 		if Balloon.Id then
 			while Library.Network.Invoke("BalloonGifts_GetActiveBalloons")[Balloon.Id] do task.wait(0.03)
@@ -136,21 +158,10 @@ while getgenv().MoneyPrinter.autoBalloons do task.wait()
 		end
 	end
 	local currentTime = os.time()
-	if getgenv().MoneyPrinter.serverHopper then
-		if not getgenv().MoneyPrinter.avoidCooldown or (getgenv().MoneyPrinter.avoidCooldown and currentTime - startTime >= getgenv().MoneyPrinter.minServerTime) then
-			local endGifts = 0
-			local endLarge = 0 
-			for i,v in pairs(getInfo("Inventory").Misc) do
-				if endGifts ~= 0 and endLarge ~= 0 then break end
-				if v.id == "Gift Bag" then
-					endGifts = (v._am or 1)
-				elseif v.id == "Large Gift Bag" then
-					endLarge = (v._am or 1)
-				end
-			end
-			if getgenv().MoneyPrinter.sendWeb then
-				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
-			end
-		end
+	if getgenv().MoneyPrinter.sendWeb then
+		sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
+	end
+	if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
+		repeat
 	end
 end
