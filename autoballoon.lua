@@ -2,7 +2,8 @@ repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
-	loadstring(game:HttpGet("https://pastebin.com/raw/wiggpuqN")
+	loadstring(game:HttpGet("https://pastebin.com/raw/wiggpuqN"))()
+end
 local LargeRAP = 11000; local SmallRAP = 2800
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
