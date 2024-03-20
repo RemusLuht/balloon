@@ -1,11 +1,3 @@
-getgenv().MoneyPrinter = {
-    toolName = "Slingshot",
-    autoBalloons = true,
-
-    sendWeb = true,
-    webURL = "https://discord.com/api/webhooks/1219664843712495646/R8GVD7AkvB_eZZOcVIX6yjIRyX9QT6DtTyZ3S5xyDTe9mI5eBQD7bRXL50PDq6-OEmAJ",
-    maybeCPUReducer = true,
-}
 repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
