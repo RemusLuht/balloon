@@ -1,7 +1,7 @@
 getgenv().MoneyPrinter = {
     toolName = "Slingshot",
     autoBalloons = true,
-    autoPresents = true,
+    autoPresents = false,
 
     avoidCooldown = false,
     minServerTime = 0, -- Avoid 268 if multi-accounting : Force stay in server for x time even if no Balloons
