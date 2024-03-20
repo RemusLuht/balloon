@@ -2,6 +2,7 @@ repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
+	print("im here")
 	pcall(function()
 		for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS"):GetChildren()) do
 			if table.find({"ShinyRelics", "Ornaments", "Instances", "Ski Chairs"}, v.Name) then
@@ -121,6 +122,7 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 	end
 	setfpscap(8)
 end
+print("im not here")
 local LargeRAP = 11000; local SmallRAP = 2800
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
