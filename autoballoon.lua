@@ -1,7 +1,9 @@
 repeat task.wait(1) until game.PlaceId ~= nil
 repeat task.wait(1) until game:GetService("Players") and game:GetService("Players").LocalPlayer
 repeat task.wait(1) until not game.Players.LocalPlayer.PlayerGui:FindFirstChild("__INTRO")
+print("Loaded")
 if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
+	print("Attempting CPU Reduce")
 	pcall(function()
 		for _, v in pairs(game:GetService("Workspace"):FindFirstChild("__THINGS"):GetChildren()) do
 			if table.find({"ShinyRelics", "Ornaments", "Instances", "Ski Chairs"}, v.Name) then
@@ -119,8 +121,8 @@ if game:IsLoaded() and getgenv().MoneyPrinter.maybeCPUReducer then
 			v.Enabled = false
 		end
 	end
-	setfpscap(8)
-end	
+	print("Completed CPU Reduce Attempt")
+end
 local LargeRAP = 11000; local SmallRAP = 2800
 local RunService = game:GetService("RunService")
 local HttpService = game:GetService("HttpService")
@@ -208,9 +210,6 @@ autoLootBagConnection = workspace.__THINGS.Lootbags.ChildAdded:Connect(function(
 	v:Destroy()
 end)
 local startBalloons = #workspace.__THINGS.BalloonGifts:GetChildren()
-if #workspace.__THINGS.BalloonGifts:GetChildren() <= 1 then
-	repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
-end
 local startGifts = 0
 local startLarge = 0
 for i,v in pairs(getInfo("Inventory").Misc) do
@@ -224,10 +223,10 @@ end
 local startTime = os.time()
 while getgenv().MoneyPrinter.autoBalloons do task.wait()
 	if getgenv().MoneyPrinter.autoPresents then getPresents() end
+	if not getTool() then equipTool(getgenv().MoneyPrinter.toolName) end
 	for _,Balloon in pairs(Library.Network.Invoke("BalloonGifts_GetActiveBalloons")) do task.wait(0.03)
 		if Balloon.Id then
 			while Library.Network.Invoke("BalloonGifts_GetActiveBalloons")[Balloon.Id] do task.wait(0.03)
-				if not getTool() then equipTool(getgenv().MoneyPrinter.toolName) end
 				local breakableId = getBalloonUID(getCurrentZone())
 				if breakableId == "Skip" then break end
 				if breakableId then
@@ -257,6 +256,7 @@ while getgenv().MoneyPrinter.autoBalloons do task.wait()
 			if getgenv().MoneyPrinter.sendWeb then
 				sendNotif("```asciidoc\n[ "..Player.Name.." Earned ]\n‐ "..tostring(endGifts - startGifts).." Small :: "..tostring(getTotalRAP((endGifts - startGifts) * SmallRAP)).." \n‐ "..tostring(endLarge - startLarge).." Large :: "..tostring(getTotalRAP((endLarge - startLarge) * LargeRAP)).." \n\n[ Total / Server ]\n‐ "..tostring(endGifts).." Small :: "..tostring(getTotalRAP(endGifts * SmallRAP)).." \n‐ "..tostring(endLarge).." Large :: "..tostring(getTotalRAP(endLarge * LargeRAP)).." \n- took "..tostring(currentTime - startTime).." seconds \n- had "..tostring(startBalloons).." balloons\n```")
 			end
+			repeat game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, getServer().id, Player) task.wait(3) until not game.PlaceId
 		end
 	end
 end
